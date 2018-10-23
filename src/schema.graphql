@@ -1,7 +1,29 @@
+scalar Date
+
 type Query {
   info: String!
   packageName: String!
   person(id: ID!): Person!
+	student(id: ID!): Student!
+}
+
+type Mutation {
+	createStudent(name: String!, email: String!, password: String!, birthDate: Date!): Student!
+	addGroupToStudent(id: ID!, name: String!): Student!
+}
+
+type Group {
+	id: ID!
+	name: String!
+}
+
+type Student {
+	id: ID!
+	name: String!
+  email: String!
+  password: String!
+  birthDate: Date!
+	groups: [Group!]!
 }
 
 type Person {
