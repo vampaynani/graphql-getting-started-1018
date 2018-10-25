@@ -5,6 +5,7 @@ type Query {
   packageName: String!
   person(id: ID!): Person!
 	student(id: ID!): Student!
+	students: [Student!]!
 }
 
 type Mutation {
