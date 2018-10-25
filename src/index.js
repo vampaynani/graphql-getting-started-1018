@@ -5,6 +5,8 @@ const Query = require('./resolvers/query');
 const Mutation = require('./resolvers/mutation');
 const Date = require('./resolvers/date');
 const Student = require('./resolvers/student');
+const jwt = require('jsonwebtoken');
+const {JWT_SECRET} = require('./config');
 
 const resolvers= {
   Query,
@@ -16,7 +18,19 @@ const resolvers= {
 
 const server = new GraphQLServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: incomingData => ({ 
+    incomingData, 
+    isAuthorized: () => {
+      const AuthHeader = incomingData.request.header('authorization');
+      if(!AuthHeader){
+        throw('Unauthorized');
+      }
+      const token = AuthHeader.replace('Bearer ', '');
+      const decodedToken = jwt.verify(token, JWT_SECRET);
+      return decodedToken;
+    }
+  })
 })
 
 if (require.main === module) {

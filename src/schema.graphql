@@ -8,13 +8,22 @@ type Query {
 }
 
 type Mutation {
-	createStudent(name: String!, email: String!, password: String!, birthDate: Date!): Student!
+	signup(email: String!, password: String!): String!
+	login(email: String!, password: String!): String!
+	createStudent(student: newStudent): Student!
 	addGroupToStudent(id: ID!, name: String!): Student!
 }
 
 type Group {
 	id: ID!
 	name: String!
+}
+
+input newStudent {
+	name: String!, 
+	email: String!, 
+	password: String!, 
+	birthDate: Date!
 }
 
 type Student {
