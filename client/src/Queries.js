@@ -8,8 +8,8 @@ export const FEED_STUDENTS = gql`{
   }
 }`;
 
-export const PERSON = gql`{
-  person(id: 1){
+export const PERSON = gql`query FetchPerson($personId: ID!){
+  person(id: $personId){
     name
     height
     mass
