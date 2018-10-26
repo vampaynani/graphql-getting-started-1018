@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { CREATE_STUDENT } from '../Mutations';
 import { FEED_STUDENTS } from '../Queries';
+import { NEW_STUDENT_SUBSCRIPTION } from '../Subscriptions';
 
 export class Students extends Component{
   constructor(props){
@@ -12,6 +13,18 @@ export class Students extends Component{
       password: '',
       birthDate: ''
     }
+  }
+  subscribeToNewStudents(subscribeToMore){
+    subscribeToMore({
+      document: NEW_STUDENT_SUBSCRIPTION,
+      updateQuery: (prev, {subscriptionData}) => {
+        if(!subscriptionData.data) return prev;
+        const newStudent = subscriptionData.data.newStudent;
+        return Object.assign({}, prev, {
+          students: [...prev.students, newStudent]
+        });
+      }
+    })
   }
   render(){
     const {name, email, password, birthDate} = this.state;
@@ -32,9 +45,10 @@ export class Students extends Component{
           {parsedLink => <button onClick={parsedLink}>Create</button>}
         </Mutation>
         <Query query={FEED_STUDENTS}>
-          {({ loading, error, data, refetch })=>{
+          {({ loading, error, data, refetch, subscribeToMore })=>{
             if(loading) return <div>Loading...</div>
             if(error) return <div>{error.message}</div>
+            this.subscribeToNewStudents(subscribeToMore);
             refetch();
             return <div>
               {data.students.map(student => <div>

@@ -15,6 +15,10 @@ type Mutation {
 	addGroupToStudent(id: ID!, name: String!): Student!
 }
 
+type Subscription {
+	newStudent: Student!
+}
+
 type Group {
 	id: ID!
 	name: String!
